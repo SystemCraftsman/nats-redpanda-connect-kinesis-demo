@@ -1,0 +1,1 @@
+# nats-redpanda-connect-kinesis-demo
