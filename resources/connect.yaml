@@ -1,0 +1,27 @@
+input:
+  aws_kinesis:
+    streams: ["vehicle_data"]
+    dynamodb:
+      table: "vehicle_data"
+      create: true
+    region: "us-west-1"
+    credentials:
+      id: "xxx"
+      secret: "xxx"
+
+pipeline:
+  processors:
+    - mapping: |
+        root.vehicle_id = this.vehicle_id
+        root.timestamp = this.timestamp
+        root.speed = this.speed * 1.60934
+        root.fuel_level = this.fuel_level
+        root.latitude = this.location.latitude
+        root.longitude = this.location.longitude
+
+output:
+  nats_jetstream:
+    urls: [nats://nats:4222]
+    subject: vehicle.data
+    headers:
+      Content-Type: application/json
